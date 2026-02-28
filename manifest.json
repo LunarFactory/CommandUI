@@ -1,8 +1,8 @@
 {
   "name": "CommandUI",
-  "version_number": "1.0.0",
+  "version_number": "1.0.1",
   "website_url": "https://github.com/LunarFactory/CommandUI",
-  "description": "지휘의 유물을 더 편하게 사용하세요.",
+  "description": "Item description for Artifact of Command",
   "dependencies": [
     "ReturnOfModding-ReturnOfModding-1.1.7",
     "ReturnsAPI-ReturnsAPI-0.1.20"

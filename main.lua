@@ -1,11 +1,13 @@
--- Import ReturnsAPI
-local RAPI = mods["ReturnsAPI-ReturnsAPI"].setup(_ENV)
+mods["ReturnsAPI-ReturnsAPI"].auto({
+	namespace = "commandUI",
+	mp = true,
+})
 
 local function log(msg)
 	print("[CommandHelper] " .. tostring(msg))
 end
 
-RAPI.Initialize.add_hotloadable(RAPI.Callback.Priority.AFTER, function()
+Initialize.add_hotloadable(Callback.Priority.AFTER, function()
 	log("Mod Initialized! Command Tooltips Active.")
 
 	-- object_id 를 key로 하여 Item/Equipment wrapper를 빠르게 찾기 위한 캐시
@@ -15,7 +17,7 @@ RAPI.Initialize.add_hotloadable(RAPI.Callback.Priority.AFTER, function()
 		local class_item = gm.variable_global_get("class_item")
 		if class_item then
 			for id = 0, gm.array_length(class_item) - 1 do
-				local wrapper = RAPI.Item.wrap(id)
+				local wrapper = Item.wrap(id)
 				if wrapper and wrapper.object_id then
 					object_to_wrapper[wrapper.object_id] = wrapper
 				end
@@ -27,7 +29,7 @@ RAPI.Initialize.add_hotloadable(RAPI.Callback.Priority.AFTER, function()
 		local class_equip = gm.variable_global_get("class_equipment")
 		if class_equip then
 			for id = 0, gm.array_length(class_equip) - 1 do
-				local wrapper = RAPI.Equipment.wrap(id)
+				local wrapper = Equipment.wrap(id)
 				if wrapper and wrapper.object_id then
 					object_to_wrapper[wrapper.object_id] = wrapper
 				end
@@ -49,13 +51,13 @@ RAPI.Initialize.add_hotloadable(RAPI.Callback.Priority.AFTER, function()
 			local crates = {}
 			if obj_id then
 				pcall(function()
-					crates = RAPI.Instance.find_all(obj_id)
+					crates = Instance.find_all(obj_id)
 				end)
 			end
 
 			if type(crates) == "table" then
 				for _, inst in ipairs(crates) do
-					if inst and RAPI.Instance.exists(inst) then
+					if inst and Instance.exists(inst) then
 						-- inst.active 값이 1 이상일 때가 UI 창이 켜진 상태
 						if inst.active and inst.active >= 1.0 then
 							local sel_idx = inst.selection
@@ -91,11 +93,11 @@ RAPI.Initialize.add_hotloadable(RAPI.Callback.Priority.AFTER, function()
 										-- 등급 색상
 										local color = 16777215 -- 기본 흰색
 										pcall(function()
-											local tier_wrap = RAPI.ItemTier.wrap(wrapper.tier)
+											local tier_wrap = ItemTier.wrap(wrapper.tier)
 											if
 												tier_wrap
 												and type(tier_wrap) == "table"
-												and tier_wrap.value ~= RAPI.ItemTier.INVALID
+												and tier_wrap.value ~= ItemTier.INVALID
 											then
 												local tr_color = tonumber(tier_wrap.pickup_color)
 												if tr_color then
@@ -173,5 +175,14 @@ RAPI.Initialize.add_hotloadable(RAPI.Callback.Priority.AFTER, function()
 		end
 	end
 
-	RAPI.Callback.add(RAPI.Callback.ON_HUD_DRAW, command_ui_on_hud_draw)
+	Callback.add(Callback.ON_HUD_DRAW, command_ui_on_hud_draw)
+end)
+
+mods.on_all_mods_loaded(function()
+	if Language and Language.register_autoload then
+		Language.register_autoload(_ENV)
+		if mods["Klehrik-Better_Crates"] then
+			log("Klehrik-Better_Crates 모드가 감지되었습니다. 전용 번역을 덮어씌웁니다!")
+		end
+	end
 end)
