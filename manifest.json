@@ -1,6 +1,6 @@
 {
   "name": "CommandUI",
-  "version_number": "1.0.1",
+  "version_number": "1.0.2",
   "website_url": "https://github.com/LunarFactory/CommandUI",
   "description": "Item description for Artifact of Command",
   "dependencies": [
