@@ -108,9 +108,19 @@ Initialize.add_hotloadable(Callback.Priority.AFTER, function()
 
 										-- 마우스 좌표 (gui)
 										local tx = 0
+										local ty = 0
 										pcall(function()
-											tx = math.floor(tonumber(gm.device_mouse_x_to_gui(0)) or 0) + 15
-											ty = math.floor(tonumber(gm.device_mouse_y_to_gui(0)) or 0) + 15
+											local hud_scale = tonumber(gm.variable_global_get("current_hud_scale"))
+												or 1.0
+											if hud_scale <= 0 then
+												hud_scale = 1.0
+											end
+
+											local mx = tonumber(gm.device_mouse_x_to_gui(0)) or 0
+											local my = tonumber(gm.device_mouse_y_to_gui(0)) or 0
+
+											tx = math.floor(mx / hud_scale) + 15
+											ty = math.floor(my / hud_scale) + 15
 										end)
 
 										-- 텍스트 정렬 초기화 (다른 UI가 중앙 정렬로 바꿨을 수 있으므로 좌/상단 정렬 강제)
